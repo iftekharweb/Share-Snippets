@@ -20,7 +20,7 @@ interface Snippet {
   isPrivate: boolean;
 }
 
-export default function EditSnippetPage(props: any) {
+export default function EditMySnippetPage(props: any) {
   const { authToken, authUserId } = useStateContext();
   console.log("authUserId:", authUserId);
 
@@ -34,7 +34,7 @@ export default function EditSnippetPage(props: any) {
   const [token, setToken] = useState<string>(authToken);
 
   const getData = async () => {
-    const data: Snippet = await actions.getSnippetData(parseInt(props.params.id));
+    const data: Snippet = await actions.getMySnippetData(authUserId,parseInt(props.params.id));
     setSnippet(data);
   };
 
@@ -61,7 +61,7 @@ export default function EditSnippetPage(props: any) {
       console.log(formState.message);
       if (formState.message === "successful") {
         alert("The snippet has been updated!");
-        actions.goToShowSnippetPage(parseInt(props.params.id));
+        actions.goToShowMySnippetPage(parseInt(props.params.id));
       } else {
         alert(formState.message);
       }

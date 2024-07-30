@@ -7,7 +7,11 @@ import { headers } from "next/headers";
 export const goToLoginPage = () => redirect("/auth/login");
 export const goToRegisterPage = () => redirect("/auth/register");
 export const goToCreatePage = () => redirect("/snippets/new");
+export const goToMySnippetsPage = () => redirect("/my-snippets");
 export const goToShowSnippetPage = (id:number) => redirect(`/snippets/${id}/`);
+export const goToShowMySnippetPage = (id:number) => redirect(`/my-snippets/${id}/`);
+export const goToEditSnippetPage = (id:number) => redirect(`/snippets/${id}/edit`);
+export const goToEditMySnippetPage = (id:number) => redirect(`/my-snippets/${id}/edit`);
 export const goToHomePage = () => redirect("/");
 
 export const fetchUser = async (authToken: string) => {
@@ -45,10 +49,40 @@ export const fetchSnippets = async () => {
   }
 };
 
+export const fetchMySnippets = async (id:number) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASEURL}/users/${id}/snippets/`
+    );
+
+    if (response.data) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Failed to fetch user data:", error);
+    throw new Error("Failed to fetch user data");
+  }
+};
+
 export const getSnippetData = async (id:number) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BASEURL}/snippets/${id}`
+    );
+
+    if (response.data) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Failed to fetch user data:", error);
+    throw new Error("Failed to fetch user data");
+  }
+};
+
+export const getMySnippetData = async (user_id:number, snippet_id: number) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASEURL}/users/${user_id}/snippets/${snippet_id}/`
     );
 
     if (response.data) {
@@ -166,7 +200,7 @@ export const createSnippetOperation = async (
 };
 
 export const editSnippetOperation = async (
-  formState: { message: string; token: string; user_id: number; snippet_id: number },
+  formState: { message: string;},
   formData: FormData
 ) => {
   const title = formData.get("title") as string;
@@ -175,16 +209,17 @@ export const editSnippetOperation = async (
   const visibility = formData.get("visibility") as string;
   const isPrivate = visibility === "public" ? false : true;
   const code = formData.get("code") as string;
-  
-  console.log("formState.user_id:", formState.user_id);
-  //return formState;
+
+  const url = formData.get("url") as string;
+  const _token = formData.get("token") as string;
+
   try {
     const res = await axios.patch(
-      `${process.env.NEXT_PUBLIC_BASEURL}/users/${formState.user_id}/snippets/${formState.snippet_id}`,
+      `${url}`,
       { title, description, language, code, isPrivate },
       {
         headers: {
-          Authorization: `Bearer ${formState.token}`,
+          Authorization: `Bearer ${_token}`,
         },
       }
     );

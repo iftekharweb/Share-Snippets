@@ -20,16 +20,16 @@ interface Snippet {
   isPrivate: boolean;
 }
 
-export default function ShowSnippetPage(props: any) {
+export default function ShowMySnippetPage(props: any) {
   const { authToken, authUserId } = useStateContext();
   const [snippet, setSnippet] = useState<Snippet | undefined>(undefined);
 
   const getData = async () => {
-    const data: Snippet = await actions.getSnippetData(
+    const data: Snippet = await actions.getMySnippetData(
+      authUserId,
       parseInt(props.params.id)
     );
     setSnippet(data);
-    console.log(data);
   };
 
   useEffect(() => {
@@ -57,7 +57,9 @@ export default function ShowSnippetPage(props: any) {
                 <button
                   className="inline-block border-e p-3 text-gray-700 hover:bg-gray-50 focus:relative"
                   title="Edit Snippet"
-                  onClick={() => actions.goToEditSnippetPage(parseInt(props.params.id))}
+                  onClick={() =>
+                    actions.goToEditMySnippetPage(parseInt(props.params.id))
+                  }
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

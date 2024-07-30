@@ -38,13 +38,13 @@ export default function Header() {
               <nav aria-label="Global">
                 <ul className="flex items-center gap-7 text-sm">
                   <li>
-                    <a
+                    <button
                       className="text-gray-500 transition hover:text-gray-500/75"
-                      href="#"
+                      onClick={() => actions.goToMySnippetsPage()}
                     >
                       {" "}
                       My snippets{" "}
-                    </a>
+                    </button>
                   </li>
 
                   <li>
