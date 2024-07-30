@@ -1,25 +1,28 @@
 "use client";
 import { useStateContext } from "@/contexts";
 import { useFormState } from "react-dom";
-import * as actions from'@/actions';
+import * as actions from "@/actions";
 import { useEffect, useState } from "react";
 
 export default function SnippetCreatePage() {
-  const { authToken, authUserId} = useStateContext();
-  const [formData, setFormData] = useState(new FormData());
+  const { authToken, authUserId } = useStateContext();
 
-  const [formState, action] = useFormState(actions.createSnippetOperation, {message: "", token: authToken, id: authUserId});
+  const [formState, action] = useFormState(actions.createSnippetOperation, {
+    message: "",
+    token: authToken,
+    id: authUserId,
+  });
 
   useEffect(() => {
     const msg = formState.message;
     console.log(msg);
-    if(msg === "successful") {
+    if (msg === "successful") {
       alert("The snippet has been created!");
       actions.goToHomePage();
-    } else if(msg !== ""){
+    } else if (msg !== "") {
       alert(msg);
     }
-  },[formState])
+  }, [formState]);
 
   return (
     <div className="px-40 py-5 bg-gray-100">

@@ -164,3 +164,41 @@ export const createSnippetOperation = async (
     return formState;
   }
 };
+
+export const editSnippetOperation = async (
+  formState: { message: string; token: string; user_id: number; snippet_id: number },
+  formData: FormData
+) => {
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const language = formData.get("language") as string;
+  const visibility = formData.get("visibility") as string;
+  const isPrivate = visibility === "public" ? false : true;
+  const code = formData.get("code") as string;
+  
+  console.log("formState.user_id:", formState.user_id);
+  //return formState;
+  try {
+    const res = await axios.patch(
+      `${process.env.NEXT_PUBLIC_BASEURL}/users/${formState.user_id}/snippets/${formState.snippet_id}`,
+      { title, description, language, code, isPrivate },
+      {
+        headers: {
+          Authorization: `Bearer ${formState.token}`,
+        },
+      }
+    );
+    if (res.data) {
+      formState.message = "successful";
+      return formState;
+    } else {
+      formState.message = "something is wrong!";
+      return formState;
+    }
+  } catch (error) {
+    console.error(error);
+    formState.message = "fucked";
+    return formState;
+  }
+};
+
