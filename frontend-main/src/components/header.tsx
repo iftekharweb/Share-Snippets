@@ -27,8 +27,8 @@ export default function Header() {
               onClick={() => actions.goToHomePage()}
             >
               <span className="sr-only">Home</span>
-              <span>
-                <FaShareAlt className="text-2xl" />
+              <span className="flex">
+                <FaShareAlt className="text-2xl" /> <span className="pl-1">ShareSnippets</span>
               </span>
             </button>
           </div>

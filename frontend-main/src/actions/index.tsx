@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 export const goToLoginPage = () => redirect("/auth/login");
 export const goToRegisterPage = () => redirect("/auth/register");
 export const goToCreatePage = () => redirect("/snippets/new");
+export const goToShowSnippetPage = (id:number) => redirect(`/snippets/${id}/`);
 export const goToHomePage = () => redirect("/");
 
 export const fetchUser = async (authToken: string) => {
@@ -18,6 +19,36 @@ export const fetchUser = async (authToken: string) => {
           Authorization: `Bearer ${authToken}`,
         },
       }
+    );
+
+    if (response.data) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Failed to fetch user data:", error);
+    throw new Error("Failed to fetch user data");
+  }
+};
+
+export const fetchSnippets = async () => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASEURL}/snippets/`
+    );
+
+    if (response.data) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Failed to fetch user data:", error);
+    throw new Error("Failed to fetch user data");
+  }
+};
+
+export const getSnippetData = async (id:number) => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASEURL}/snippets/${id}`
     );
 
     if (response.data) {
@@ -101,7 +132,7 @@ export const registerOperation = async (
 };
 
 export const createSnippetOperation = async (
-  formState: { message: string, token: string, id: number },
+  formState: { message: string; token: string; id: number },
   formData: FormData
 ) => {
   const title = formData.get("title") as string;
@@ -109,7 +140,7 @@ export const createSnippetOperation = async (
   const code = formData.get("code") as string;
   const language = formData.get("language") as string;
   const visibility = formData.get("visibility") as string;
-  const isPrivate = (visibility === "public") ? false : true;
+  const isPrivate = visibility === "public" ? false : true;
   try {
     const res = await axios.post(
       `${process.env.NEXT_PUBLIC_BASEURL}/users/${formState.id}/snippets/`,
@@ -117,7 +148,7 @@ export const createSnippetOperation = async (
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${formState.token}`
+          Authorization: `Bearer ${formState.token}`,
         },
       }
     );

@@ -54,6 +54,7 @@ export default function SnippetCreatePage() {
                   Select a programming language
                 </option>
                 <option value="javascript">JavaScript</option>
+                <option value="typescript">TypeScript</option>
                 <option value="python">Python</option>
                 <option value="java">Java</option>
                 <option value="csharp">C#</option>

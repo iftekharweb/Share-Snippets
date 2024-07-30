@@ -117,7 +117,6 @@ export function ContextProvider({ children }: {
   const fetchUserData = useCallback(async () => {
     try {
       const data = await actions.fetchUser(authToken);
-      console.log(data);
       setAuthEmail(data.email);
       setAuthName(data.name);
       setAuthUserId(data.id);
