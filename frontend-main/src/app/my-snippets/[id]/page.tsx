@@ -23,6 +23,8 @@ interface Snippet {
 export default function ShowMySnippetPage(props: any) {
   const { authToken, authUserId } = useStateContext();
   const [snippet, setSnippet] = useState<Snippet | undefined>(undefined);
+  const [open, setOpen] = useState<boolean>(false);
+
 
   const getData = async () => {
     const data: Snippet = await actions.getMySnippetData(
@@ -36,8 +38,25 @@ export default function ShowMySnippetPage(props: any) {
     getData();
   }, []);
 
+  const handleCancel = () => setOpen(!open);
+  const handleDelete = () => {
+    actions.deleteSnippetAction(
+      authUserId,
+      parseInt(props.params.id),
+      authToken
+    );
+    handleCancel();
+    actions.goToMySnippetsPage();
+  };
+
   return (
     <div className=" bg-gray-100 p-10 h-auto">
+      {open && (
+        <ConfirmDelete
+          handleDelete={handleDelete}
+          handleCancel={handleCancel}
+        />
+      )}
       <div className="bg-white rounded-lg py-5 px-8 h-full">
         <div className="flex justify-between items-center h-auto">
           <div className="flex flex-col justify-start items-center gap-4">
@@ -80,6 +99,7 @@ export default function ShowMySnippetPage(props: any) {
                 <button
                   className="inline-block p-3 text-gray-700 hover:bg-gray-50 focus:relative"
                   title="Delete Snippet"
+                  onClick={handleCancel}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +125,7 @@ export default function ShowMySnippetPage(props: any) {
           <p>Code: [{snippet?.language}]</p>
         </div>
         <div>
-          {snippet?.code && (
+          {snippet?.code && !open && (
             <Editor
               height="90vh"
               defaultLanguage={snippet?.language}
@@ -114,6 +134,33 @@ export default function ShowMySnippetPage(props: any) {
               className="mb-4 border border-gray-200 rounded-md shadow-md"
             />
           )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+function ConfirmDelete({ handleDelete, handleCancel }: any) {
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center">
+      <div className="bg-white p-6 rounded shadow-md text-center">
+        <p className="mb-4 text-lg">
+          Are you sure you want to delete the snippet?
+        </p>
+        <div className="flex justify-center space-x-4">
+          <button
+            onClick={handleDelete}
+            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+          >
+            Delete
+          </button>
+          <button
+            onClick={handleCancel}
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>

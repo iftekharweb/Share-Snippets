@@ -8,10 +8,13 @@ export const goToLoginPage = () => redirect("/auth/login");
 export const goToRegisterPage = () => redirect("/auth/register");
 export const goToCreatePage = () => redirect("/snippets/new");
 export const goToMySnippetsPage = () => redirect("/my-snippets");
-export const goToShowSnippetPage = (id:number) => redirect(`/snippets/${id}/`);
-export const goToShowMySnippetPage = (id:number) => redirect(`/my-snippets/${id}/`);
-export const goToEditSnippetPage = (id:number) => redirect(`/snippets/${id}/edit`);
-export const goToEditMySnippetPage = (id:number) => redirect(`/my-snippets/${id}/edit`);
+export const goToShowSnippetPage = (id: number) => redirect(`/snippets/${id}/`);
+export const goToShowMySnippetPage = (id: number) =>
+  redirect(`/my-snippets/${id}/`);
+export const goToEditSnippetPage = (id: number) =>
+  redirect(`/snippets/${id}/edit`);
+export const goToEditMySnippetPage = (id: number) =>
+  redirect(`/my-snippets/${id}/edit`);
 export const goToHomePage = () => redirect("/");
 
 export const fetchUser = async (authToken: string) => {
@@ -49,7 +52,7 @@ export const fetchSnippets = async () => {
   }
 };
 
-export const fetchMySnippets = async (id:number) => {
+export const fetchMySnippets = async (id: number) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BASEURL}/users/${id}/snippets/`
@@ -64,7 +67,7 @@ export const fetchMySnippets = async (id:number) => {
   }
 };
 
-export const getSnippetData = async (id:number) => {
+export const getSnippetData = async (id: number) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BASEURL}/snippets/${id}`
@@ -79,7 +82,7 @@ export const getSnippetData = async (id:number) => {
   }
 };
 
-export const getMySnippetData = async (user_id:number, snippet_id: number) => {
+export const getMySnippetData = async (user_id: number, snippet_id: number) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BASEURL}/users/${user_id}/snippets/${snippet_id}/`
@@ -200,7 +203,7 @@ export const createSnippetOperation = async (
 };
 
 export const editSnippetOperation = async (
-  formState: { message: string;},
+  formState: { message: string },
   formData: FormData
 ) => {
   const title = formData.get("title") as string;
@@ -237,3 +240,18 @@ export const editSnippetOperation = async (
   }
 };
 
+export const deleteSnippetAction = async (
+  user_id: number,
+  snippet_id: number,
+  token: string
+) => {
+  const res = await axios.delete(
+    `${process.env.NEXT_PUBLIC_BASEURL}/users/${user_id}/snippets/${snippet_id}/`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  goToMySnippetsPage();
+};
