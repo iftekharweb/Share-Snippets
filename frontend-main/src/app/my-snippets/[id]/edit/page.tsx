@@ -21,8 +21,7 @@ interface Snippet {
 }
 
 export default function EditMySnippetPage(props: any) {
-  const { authToken, authUserId } = useStateContext();
-  console.log("authUserId:", authUserId);
+  const { authToken, authUserId, Tsuccess, Terror } = useStateContext();
 
   const [snippet, setSnippet] = useState<Snippet | undefined>(undefined);
   const [code, setCode] = useState<string>("");
@@ -30,11 +29,12 @@ export default function EditMySnippetPage(props: any) {
   const [description, setDescription] = useState<string>("");
   const [visibility, setVisibility] = useState<string>("");
   const [language, setLanguage] = useState<string>("");
-  const [user_id, setUser_id] = useState<number>(authUserId);
-  const [token, setToken] = useState<string>(authToken);
 
   const getData = async () => {
-    const data: Snippet = await actions.getMySnippetData(authUserId,parseInt(props.params.id));
+    const data: Snippet = await actions.getMySnippetData(
+      authUserId,
+      parseInt(props.params.id)
+    );
     setSnippet(data);
   };
 
@@ -53,17 +53,17 @@ export default function EditMySnippetPage(props: any) {
   }, [snippet]);
 
   const [formState, action] = useFormState(actions.editSnippetOperation, {
-    message: ""
+    message: "",
   });
 
   useEffect(() => {
     if (formState.message) {
       console.log(formState.message);
       if (formState.message === "successful") {
-        alert("The snippet has been updated!");
+        Tsuccess("Updated successfully");
         actions.goToShowMySnippetPage(parseInt(props.params.id));
       } else {
-        alert(formState.message);
+        Terror("Something went wrong. Please Try again");
       }
     }
   }, [formState]);
@@ -90,11 +90,33 @@ export default function EditMySnippetPage(props: any) {
           )}
         </div>
         <form action={action} className="space-y-4">
-          <input type="hidden" name="code" id="code" value={code} onChange={() => {}} />
-          <input type="hidden" name="url" id="url" value={`${process.env.NEXT_PUBLIC_BASEURL}/users/${authUserId}/snippets/${parseInt(props.params.id)}/`} onChange={() => {}} />
-          <input type="hidden" name="token" id="token" value={authToken} onChange={() => {}} />
+          <input
+            type="hidden"
+            name="code"
+            id="code"
+            value={code}
+            onChange={() => {}}
+          />
+          <input
+            type="hidden"
+            name="url"
+            id="url"
+            value={`${
+              process.env.NEXT_PUBLIC_BASEURL
+            }/users/${authUserId}/snippets/${parseInt(props.params.id)}/`}
+            onChange={() => {}}
+          />
+          <input
+            type="hidden"
+            name="token"
+            id="token"
+            value={authToken}
+            onChange={() => {}}
+          />
           <div>
-            <label className="sr-only" htmlFor="title">Title</label>
+            <label className="sr-only" htmlFor="title">
+              Title
+            </label>
             <input
               className="w-full rounded-lg border border-gray-200 p-3 text-sm"
               placeholder="Title"
@@ -108,7 +130,9 @@ export default function EditMySnippetPage(props: any) {
 
           <div className="flex space-x-4">
             <div className="w-1/2">
-              <label className="sr-only" htmlFor="language">Programming Language</label>
+              <label className="sr-only" htmlFor="language">
+                Programming Language
+              </label>
               <select
                 className="w-full rounded-lg border border-gray-200 p-3 text-sm"
                 id="language"
@@ -116,7 +140,9 @@ export default function EditMySnippetPage(props: any) {
                 value={language}
                 onChange={(e) => setLanguage(e.target.value)}
               >
-                <option value="" disabled>Select a programming language</option>
+                <option value="" disabled>
+                  Select a programming language
+                </option>
                 <option value="javascript">JavaScript</option>
                 <option value="typescript">TypeScript</option>
                 <option value="python">Python</option>
@@ -138,7 +164,9 @@ export default function EditMySnippetPage(props: any) {
                   checked={visibility === "private"}
                   onChange={(e) => setVisibility(e.target.value)}
                 />
-                <label htmlFor="private" className="ml-2 text-sm text-gray-900">Private</label>
+                <label htmlFor="private" className="ml-2 text-sm text-gray-900">
+                  Private
+                </label>
               </div>
               <div className="flex items-center">
                 <input
@@ -150,13 +178,17 @@ export default function EditMySnippetPage(props: any) {
                   checked={visibility === "public"}
                   onChange={(e) => setVisibility(e.target.value)}
                 />
-                <label htmlFor="public" className="ml-2 text-sm text-gray-900">Public</label>
+                <label htmlFor="public" className="ml-2 text-sm text-gray-900">
+                  Public
+                </label>
               </div>
             </div>
           </div>
 
           <div>
-            <label className="sr-only" htmlFor="description">Description</label>
+            <label className="sr-only" htmlFor="description">
+              Description
+            </label>
             <textarea
               className="w-full rounded-lg border border-gray-200 p-3 text-sm"
               placeholder="Description"

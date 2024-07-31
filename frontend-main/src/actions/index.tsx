@@ -1,8 +1,7 @@
 "use server";
 
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import axios from "axios";
-import { headers } from "next/headers";
 
 export const goToLoginPage = () => redirect("/auth/login");
 export const goToRegisterPage = () => redirect("/auth/register");
@@ -103,6 +102,10 @@ export const loginOperation = async (
 ) => {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+  if(email === "" || password === "") {
+    formState.message = "Please fill up all the fields"
+    return formState;
+  }
   try {
     const res = await axios.post(
       `${process.env.NEXT_PUBLIC_BASEURL}/login/`,
@@ -121,13 +124,13 @@ export const loginOperation = async (
     } else {
       return {
         token: "",
-        message: "Some Server Error!",
+        message: "Invalid email or password",
       };
     }
   } catch (error) {
     return {
       token: "",
-      message: "fucked!",
+      message: "Invalid email or password",
     };
   }
 };
@@ -139,6 +142,10 @@ export const registerOperation = async (
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+  if(name === "" || email === "" || password === "") {
+    formState.message = "Please fill up all the fields & provide your valid email correctly"
+    return formState;
+  }
   try {
     const res = await axios.post(
       `${process.env.NEXT_PUBLIC_BASEURL}/register/`,
@@ -157,13 +164,13 @@ export const registerOperation = async (
     } else {
       return {
         token: "",
-        message: "error",
+        message: "Something is wrong!",
       };
     }
   } catch (error) {
     return {
       token: "",
-      message: "error",
+      message: "Something is wrong!",
     };
   }
 };
@@ -197,7 +204,7 @@ export const createSnippetOperation = async (
       return formState;
     }
   } catch (error) {
-    formState.message = "fucked";
+    formState.message = "Something is wrong!";
     return formState;
   }
 };
@@ -235,7 +242,7 @@ export const editSnippetOperation = async (
     }
   } catch (error) {
     console.error(error);
-    formState.message = "fucked";
+    formState.message = "Something is wrong!";
     return formState;
   }
 };

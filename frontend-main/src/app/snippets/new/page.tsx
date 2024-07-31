@@ -5,7 +5,7 @@ import * as actions from "@/actions";
 import { useEffect, useState } from "react";
 
 export default function SnippetCreatePage() {
-  const { authToken, authUserId } = useStateContext();
+  const { authToken, authUserId, Tsuccess, Terror } = useStateContext();
 
   const [formState, action] = useFormState(actions.createSnippetOperation, {
     message: "",
@@ -17,10 +17,10 @@ export default function SnippetCreatePage() {
     const msg = formState.message;
     console.log(msg);
     if (msg === "successful") {
-      alert("The snippet has been created!");
+      Tsuccess("Created Successfully!");
       actions.goToHomePage();
     } else if (msg !== "") {
-      alert(msg);
+      Terror("Something went wrong. Please try again!");
     }
   }, [formState]);
 

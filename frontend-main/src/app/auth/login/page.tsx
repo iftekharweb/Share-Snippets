@@ -1,25 +1,33 @@
 "use client";
 
 import { FaShareAlt } from "react-icons/fa";
-import * as actions from'@/actions';
-import { useStateContext } from '@/contexts';
+import * as actions from "@/actions";
+import { useStateContext } from "@/contexts";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
 export default function Login() {
-  const {authToken, setAuthToken} = useStateContext();
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const { authToken, setAuthToken, Tsuccess, Terror } = useStateContext();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-  const [formState, action] = useFormState(actions.loginOperation, {token:"", message: ""});
+  const [formState, action] = useFormState(actions.loginOperation, {
+    token: "",
+    message: "",
+  });
   useEffect(() => {
-    if(formState.token) {
+    if (formState.token) {
       console.log(formState.token);
       setAuthToken(formState.token);
       localStorage.setItem("token", formState.token);
+      Tsuccess("Logged in Successfully");
       actions.goToHomePage();
+    } else {
+      if (formState.message !== "") {
+        Terror(formState.message);
+      }
     }
-  }, [formState])
+  }, [formState]);
 
   return (
     <div className="bg-gray-50">

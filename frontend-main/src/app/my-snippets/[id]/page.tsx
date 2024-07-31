@@ -21,10 +21,9 @@ interface Snippet {
 }
 
 export default function ShowMySnippetPage(props: any) {
-  const { authToken, authUserId } = useStateContext();
+  const { authToken, authUserId, Tsuccess, Terror } = useStateContext();
   const [snippet, setSnippet] = useState<Snippet | undefined>(undefined);
   const [open, setOpen] = useState<boolean>(false);
-
 
   const getData = async () => {
     const data: Snippet = await actions.getMySnippetData(
@@ -46,6 +45,7 @@ export default function ShowMySnippetPage(props: any) {
       authToken
     );
     handleCancel();
+    Tsuccess("Deleted successfully");
     actions.goToMySnippetsPage();
   };
 
@@ -139,7 +139,6 @@ export default function ShowMySnippetPage(props: any) {
     </div>
   );
 }
-
 
 function ConfirmDelete({ handleDelete, handleCancel }: any) {
   return (

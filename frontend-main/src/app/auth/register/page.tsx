@@ -1,24 +1,32 @@
 "use client";
 
 import { FaShareAlt } from "react-icons/fa";
-import * as actions from'@/actions';
-import { useStateContext } from '@/contexts';
+import * as actions from "@/actions";
+import { useStateContext } from "@/contexts";
 import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
 export default function Register() {
-  const {authToken, setAuthToken} = useStateContext();
-  const [name, setName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const { authToken, setAuthToken, Tsuccess, Terror } = useStateContext();
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-  const [formState, action] = useFormState(actions.registerOperation, {token:"", message: ""});
+  const [formState, action] = useFormState(actions.registerOperation, {
+    token: "",
+    message: "",
+  });
   useEffect(() => {
-    if(formState.token) {
+    if (formState.token) {
       console.log(formState.token);
       setAuthToken(formState.token);
       localStorage.setItem("token", formState.token);
+      Tsuccess("Logged in Successfully");
       actions.goToHomePage();
+    } else {
+      if (formState.message !== "") {
+        Terror(formState.message);
+      }
     }
   }, [formState]);
 
@@ -27,9 +35,11 @@ export default function Register() {
       <div className="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-lg">
           <div className="flex justify-center items-center gap-3">
-            <div className="text-center text-2xl font-bold text-teal-600 sm:text-3xl"><FaShareAlt/></div>
+            <div className="text-center text-2xl font-bold text-teal-600 sm:text-3xl">
+              <FaShareAlt />
+            </div>
             <h1 className="text-center text-2xl font-bold text-teal-600 sm:text-3xl">
-            Share Snippet
+              Share Snippet
             </h1>
           </div>
 
@@ -53,16 +63,14 @@ export default function Register() {
 
               <div className="relative">
                 <input
-                  name="name" 
+                  name="name"
                   type="text"
                   className="w-full rounded-lg border border-gray-200 p-4 pe-12 text-sm shadow-sm"
                   placeholder="Enter full name"
                   onChange={(e) => setName(e.target.value)}
                 />
 
-                <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-                  
-                </span>
+                <span className="absolute inset-y-0 end-0 grid place-content-center px-4"></span>
               </div>
             </div>
 

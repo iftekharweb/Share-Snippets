@@ -7,7 +7,8 @@ import { IoMdLogOut } from "react-icons/io";
 import * as actions from "@/actions";
 
 export default function Header() {
-  const { authToken, authEmail, authName, handleLogOut} = useStateContext();
+  const { authToken, authEmail, authName, handleLogOut, Tsuccess, Terror } =
+    useStateContext();
 
   const handleLogin = () => {
     actions.goToLoginPage();
@@ -28,7 +29,8 @@ export default function Header() {
             >
               <span className="sr-only">Home</span>
               <span className="flex">
-                <FaShareAlt className="text-2xl" /> <span className="pl-1">ShareSnippets</span>
+                <FaShareAlt className="text-2xl" />{" "}
+                <span className="pl-1">ShareSnippets</span>
               </span>
             </button>
           </div>
@@ -107,9 +109,12 @@ export default function Header() {
                   Hi, {authName}
                 </p>
               </div>
-                <button className="rounded-lg" onClick={handleLogOut}>
-                  <IoMdLogOut className="text-2xl font-bold hover:text-red-500"/>
-                </button>
+              <button className="rounded-lg" onClick={() => {
+                handleLogOut();
+                Terror("Logged out successfully");
+              }}>
+                <IoMdLogOut className="text-2xl font-bold hover:text-red-500" />
+              </button>
             </div>
           )}
         </div>

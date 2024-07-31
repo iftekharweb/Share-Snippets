@@ -21,7 +21,7 @@ interface Snippet {
 }
 
 export default function ShowSnippetPage(props: any) {
-  const { authToken, authUserId } = useStateContext();
+  const { authToken, authUserId, Tsuccess, Terror } = useStateContext();
   const [snippet, setSnippet] = useState<Snippet | undefined>(undefined);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -44,6 +44,7 @@ export default function ShowSnippetPage(props: any) {
       authToken
     );
     handleCancel();
+    Tsuccess("Deleted sucessfully");
     actions.goToMySnippetsPage();
   };
 
